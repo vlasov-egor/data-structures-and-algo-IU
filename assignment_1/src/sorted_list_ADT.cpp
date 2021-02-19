@@ -1,6 +1,6 @@
 /** 
  * TODO
- * implement List
+ * implement SortedList
  * implement SortedList 
  */
 
@@ -18,32 +18,30 @@ public:
     virtual T get(int i);
     virtual int indexOf(T item);
     virtual void remove(int i);
-    virtual List<T> searchRange(T from, T to);
+    virtual SortedList<T> *searchRange(T from, T to);
     virtual int size();
     virtual bool isEmpty();
 };
 
 template <class T>
-struct Node
+class Node
 {
     T data;
-    struct Node *next_node;
+    Node *next_node;
 };
 
 template <class T>
 class SinglyLinkedSortedList : SortedList<T>
 {
-public:
-    SinglyLinkedSortedList()
-    {
-        int len = 0;
-        T *head = NULL;
-        T *tail = NULL;
-    }
+private:
+    int len = 0;
+    T *head = NULL;
+    T *tail = NULL;
 
+public:
     void add(T item)
     {
-        struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+        Node<T> *new_node = new Node<T>();
         T current = head;
         int counter = 0;
 
@@ -80,7 +78,7 @@ public:
 
     void addLast(T item)
     {
-        struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+        Node<T> *new_node = new Node<T>();
 
         if (!head)
         {
@@ -89,7 +87,7 @@ public:
         else
         {
             tail->next_node = new_node;
-            tail = new_node
+            tail = new_node;
         }
     }
 
@@ -139,11 +137,11 @@ public:
         prev->next_node = current->next_node;
     }
 
-    List<T> searchRange(T from, T to)
+    SortedList<T> *searchRange(T from, T to)
     {
-        SinglyLinkedSortedList List;
+        SinglyLinkedSortedList<T> List = new SinglyLinkedSortedList<T>();
 
-        current = head;
+        T current = head;
         for (int i = 0; i <= to; i++)
         {
             current = current->next_node;
@@ -153,13 +151,13 @@ public:
             }
         }
 
-        return List
+        return List;
     }
 
     int size()
     {
         int size = 0;
-        current = head;
+        T current = head;
 
         for (int i = 0; i < len; i++)
         {
@@ -172,7 +170,7 @@ public:
 
     bool isEmpty()
     {
-        return ? head;
+        return head ? true:false;
     }
 };
 
