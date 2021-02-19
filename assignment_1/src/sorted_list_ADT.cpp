@@ -37,8 +37,8 @@ public:
     SinglyLinkedSortedList()
     {
         int len = 0;
-        T *head = NONE;
-        T *tail = NONE;
+        T *head = NULL;
+        T *tail = NULL;
     }
 
     void add(T item)
@@ -62,7 +62,7 @@ public:
         else
         {
             counter = 1;
-            while (current->next_node != None && current->next_node->data <= new_node->data)
+            while (current->next_node != NULL && current->next_node->data <= new_node->data)
             {
                 current = current->next_node;
                 counter++;
@@ -178,5 +178,4 @@ public:
 
 int main(int argc, char const *argv[])
 {
-    
 }
