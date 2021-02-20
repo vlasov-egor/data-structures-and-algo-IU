@@ -1,9 +1,21 @@
+/**
+ * @file cafe_accounting.cpp
+ * @author Vlasov Egor (group-05)
+ * @date 2021-02-20
+ */
+
 #include <iostream>
 #include <string>
 #include <cmath>
 
 using namespace std;
 
+/**
+ * @brief hash function 
+ * 
+ * @param token string for hashing
+ * @return long long int hashcode
+ */
 long long int hash(string token)
 {
     long long h = 0;
@@ -17,6 +29,11 @@ long long int hash(string token)
     return h;
 }
 
+/**
+ * @brief Node of linked list
+ * 
+ * @tparam T 
+ */
 template <class T>
 class Node
 {
@@ -24,6 +41,12 @@ public:
     T data;
     Node<T> *next_node;
 };
+
+/**
+ * @brief interface of Sorted list
+ * 
+ * @tparam T 
+ */
 template <class T>
 class SortedList
 {
@@ -40,6 +63,11 @@ public:
     virtual bool isEmpty() = 0;
 };
 
+/**
+ * @brief Linked list
+ * 
+ * @tparam T 
+ */
 template <class T>
 class SinglyLinkedSortedList : SortedList<T>
 {
@@ -49,6 +77,11 @@ private:
     Node<T> *tail = NULL;
 
 public:
+    /**
+     * @brief adding element to list
+     * 
+     * @param item some element
+     */
     void add(T item)
     {
         if (!has(item))
@@ -58,17 +91,20 @@ public:
             new_node->data = item;
             Node<T> *current = head;
 
+            // empty list
             if (!head)
             {
                 head = new_node;
                 tail = new_node;
             }
+            //  adding in begining
             else if (new_node->data <= head->data)
             {
                 new_node->next_node = head;
                 head = new_node;
             }
             else
+            // adding in some place(sorting)
             {
                 while (current->next_node != NULL && current->next_node->data <= new_node->data)
                 {
@@ -87,6 +123,11 @@ public:
         }
     }
 
+    /**
+     * @brief adding element to the end
+     * 
+     * @param item some element
+     */
     void addLast(T item)
     {
         Node<T> *new_node = new Node<T>();
@@ -104,16 +145,32 @@ public:
         }
     }
 
+    /**
+     * @brief returns the smallest element
+     * 
+     * @return T smallest element
+     */
     T least()
     {
         return head->data;
     }
 
+    /**
+     * @brief returns the greatest element
+     * 
+     * @return T greatest element
+     */
     T greatest()
     {
         return tail->data;
     }
 
+    /**
+     * @brief getting element by index
+     * 
+     * @param i index
+     * @return T element with index i
+     */
     T get(int i)
     {
         Node<T> *current = head;
@@ -125,16 +182,25 @@ public:
         return current->data;
     }
 
+    /**
+     * @brief check if there exists element item
+     * 
+     * @param item element
+     * @return true if there exists item
+     * @return false if there not exists item
+     */
     bool has(T item)
     {
-        if (size() == 0) {
+        if (size() == 0)
+        {
             return false;
         }
 
         Node<T> *current = head;
         while (current)
         {
-            if (current->data == item){
+            if (current->data == item)
+            {
                 return true;
             }
 
@@ -144,6 +210,11 @@ public:
         return false;
     }
 
+    /**
+     * @brief removing of element by index
+     * 
+     * @param i index
+     */
     void remove(int i)
     {
         Node<T> *current = head;
@@ -158,6 +229,11 @@ public:
         prev->next_node = current->next_node;
     }
 
+    /**
+     * @brief remove element which is equal to item
+     * 
+     * @param item some element
+     */
     void removeItem(T item)
     {
         if (item == head->data)
@@ -178,6 +254,13 @@ public:
         prev->next_node = current->next_node;
     }
 
+    /**
+     * @brief search range in list from <from> to <to>
+     * 
+     * @param from lower bound
+     * @param to upper bound
+     * @return SortedList<T>* neww list with that range
+     */
     SortedList<T> *searchRange(T from, T to)
     {
         auto List = new SinglyLinkedSortedList<T>();
@@ -195,28 +278,49 @@ public:
         return List;
     }
 
+    /**
+     * @brief Get the Head object
+     * 
+     * @return Node<T>* head element
+     */
     Node<T> *getHead()
     {
         return head;
     }
 
+    /**
+     * @brief returns size of list
+     * 
+     * @return int size
+     */
     int size()
     {
         return len;
     }
 
+    /**
+     * @brief checking emptiness of list
+     * 
+     * @return true if empty
+     * @return false if not
+     */
     bool isEmpty()
     {
         return head ? true : false;
     }
 };
 
+/**
+ * @brief class for items
+ * 
+ */
 class Item
 {
 public:
     string name;
     float price;
 
+    //  operators overload for comparisons
     bool operator==(const Item &rhs)
     {
         return (price == rhs.price) && (name == rhs.name);
@@ -245,6 +349,12 @@ public:
     }
 };
 
+/**
+ * @brief interface of map
+ * 
+ * @tparam Key 
+ * @tparam Value 
+ */
 template <class Key, class Value>
 class Map
 {
@@ -256,6 +366,12 @@ public:
     virtual SinglyLinkedSortedList<Key> *keys() = 0;
 };
 
+/**
+ * @brief node of map
+ * 
+ * @tparam Key 
+ * @tparam Value 
+ */
 template <class Key, class Value>
 class MapNode
 {
@@ -266,17 +382,27 @@ public:
     bool used = false;
 };
 
+/**
+ * @brief hash map 
+ * 
+ * @tparam Key 
+ * @tparam Value 
+ */
 template <class Key, class Value>
 class HashMap : public Map<Key, Value>
 {
 private:
     int len = 1000;
-    int n = (int)round((float)len * 0.86);
+    int n = (int)round((float)len * 0.86); //  from wiki
 
     MapNode<Key, Value> *arr = new MapNode<Key, Value>[len];
     SinglyLinkedSortedList<Key> *keysList = new SinglyLinkedSortedList<Key>();
 
 public:
+    /**
+     * @brief resizing of array
+     * 
+    */
     void resize()
     {
         MapNode<Key, Value> *old = arr;
@@ -296,6 +422,12 @@ public:
         }
     }
 
+    /**
+     * @brief putting new element to array
+     * 
+     * @param key 
+     * @param value 
+     */
     void put(Key key, Value value)
     {
         int h = ::hash(key) % n;
@@ -339,6 +471,13 @@ public:
         arr[h].next_index = index;
     }
 
+    /**
+     * @brief check if in array exists some element with key key
+     * 
+     * @param key 
+     * @return true 
+     * @return false 
+     */
     bool exists(Key key)
     {
         int h = ::hash(key) % n;
@@ -359,6 +498,12 @@ public:
         return true;
     }
 
+    /**
+     * @brief getting element by key
+     * 
+     * @param key 
+     * @return Value& 
+     */
     Value &get(Key key)
     {
         int h = ::hash(key) % n;
@@ -379,6 +524,12 @@ public:
         return arr[h].value;
     }
 
+    /**
+     * @brief removing element by key
+     * 
+     * @param key 
+     * @return Value 
+     */
     Value remove(Key key)
     {
         int h = ::hash(key) % n;
@@ -405,12 +556,21 @@ public:
         return arr[h].value;
     }
 
+    /**
+     * @brief init list for keys
+     * 
+     * @return SinglyLinkedSortedList<Key>* 
+     */
     SinglyLinkedSortedList<Key> *keys()
     {
         return keysList;
     }
 };
 
+/**
+ * @brief class which contains total sum of prices and all codes of products
+ * 
+ */
 class Now
 {
 public:
@@ -421,6 +581,7 @@ public:
 int main(int argc, char const *argv[])
 {
 
+    // init
     HashMap<string, Now> *all_time = new HashMap<string, Now>();
 
     int n;
@@ -431,6 +592,7 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < n; i++)
     {
+        // parsing
         getline(cin, line);
         int first_space = line.find(" ", 0);
         int second_space = line.find(" ", first_space + 1);
@@ -443,26 +605,29 @@ int main(int argc, char const *argv[])
         float price = stof(line.substr(third_space + 2, fourth_space - (third_space + 2)));
         string name = line.substr(fourth_space + 1);
 
+        // adding new orices and codes
         if (all_time->exists(date))
         {
-            // cout << "altered " << date << endl;
+
             Now &day = all_time->get(date);
             day.total += price;
             day.codes->put(id, true);
         }
         else
+        // adding new day
         {
-            // cout << "created " << date << endl;
+
             auto day = Now{
                 price,
                 new HashMap<string, bool>()};
-            // cout << "sasat tut" << endl;
+
             day.codes->put(id, true);
-            // cout << "pososal" << endl;
+
             all_time->put(date, day);
         }
     }
 
+    // printing
     for (auto dN = all_time->keys()->getHead(); dN; dN = dN->next_node)
     {
         Now day = all_time->get(dN->data);

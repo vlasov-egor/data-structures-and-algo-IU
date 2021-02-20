@@ -1,8 +1,19 @@
+/**
+ * @file cafe_accounting.cpp
+ * @author Vlasov Egor (group-05)
+ * @date 2021-02-20
+ */
+
 #include <iostream>
 #include <string>
 
 using namespace std;
 
+/**
+ * @brief Node of linked list
+ * 
+ * @tparam T 
+ */
 template <class T>
 class Node
 {
@@ -10,6 +21,12 @@ public:
     T data;
     Node<T> *next_node;
 };
+
+/**
+ * @brief interface of Sorted list
+ * 
+ * @tparam T 
+ */
 template <class T>
 class SortedList
 {
@@ -26,6 +43,11 @@ public:
     virtual bool isEmpty() = 0;
 };
 
+/**
+ * @brief Linked list
+ * 
+ * @tparam T 
+ */
 template <class T>
 class SinglyLinkedSortedList : SortedList<T>
 {
@@ -35,6 +57,11 @@ private:
     Node<T> *tail = NULL;
 
 public:
+    /**
+     * @brief adding element to list
+     * 
+     * @param item some element
+     */
     void add(T item)
     {
         Node<T> *new_node = new Node<T>();
@@ -69,6 +96,11 @@ public:
         len++;
     }
 
+    /**
+     * @brief adding element to the end
+     * 
+     * @param item some element
+     */
     void addLast(T item)
     {
         Node<T> *new_node = new Node<T>();
@@ -86,16 +118,32 @@ public:
         }
     }
 
+    /**
+     * @brief returns the smallest element
+     * 
+     * @return T smallest element
+     */
     T least()
     {
         return head->data;
     }
 
+    /**
+     * @brief returns the greatest element
+     * 
+     * @return T greatest element
+     */
     T greatest()
     {
         return tail->data;
     }
 
+    /**
+     * @brief getting element by index
+     * 
+     * @param i index
+     * @return T element with index i
+     */
     T get(int i)
     {
         Node<T> *current = head;
@@ -107,6 +155,12 @@ public:
         return current->data;
     }
 
+    /**
+     * @brief returns index of item
+     * 
+     * @param item element
+     * @return int index
+     */
     int indexOf(T item)
     {
         Node<T> *current = head;
@@ -120,6 +174,11 @@ public:
         return index;
     }
 
+    /**
+     * @brief removing of element by index
+     * 
+     * @param i index
+     */
     void remove(int i)
     {
         Node<T> *current = head;
@@ -134,6 +193,11 @@ public:
         prev->next_node = current->next_node;
     }
 
+    /**
+     * @brief remove element which is equal to item
+     * 
+     * @param item some element
+     */
     void removeItem(T item)
     {
         if (item == head->data)
@@ -154,6 +218,13 @@ public:
         prev->next_node = current->next_node;
     }
 
+    /**
+     * @brief search range in list from <from> to <to>
+     * 
+     * @param from lower bound
+     * @param to upper bound
+     * @return SortedList<T>* neww list with that range
+     */
     SortedList<T> *searchRange(T from, T to)
     {
         auto List = new SinglyLinkedSortedList<T>();
@@ -171,22 +242,42 @@ public:
         return List;
     }
 
+    /**
+     * @brief Get the Head object
+     * 
+     * @return Node<T>* head element
+     */
     Node<T> *getHead()
     {
         return head;
     }
 
+    /**
+     * @brief returns size of list
+     * 
+     * @return int size
+     */
     int size()
     {
         return len;
     }
 
+    /**
+     * @brief checking emptiness of list
+     * 
+     * @return true if empty
+     * @return false if not
+     */
     bool isEmpty()
     {
         return head ? true : false;
     }
 };
 
+/**
+ * @brief class for items
+ * 
+ */
 class Item
 {
 public:
@@ -224,6 +315,7 @@ public:
 int main(int argc, char const *argv[])
 {
 
+    //  init
     auto items = new SinglyLinkedSortedList<Item>();
     int n;
     string line;
@@ -233,6 +325,7 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < n; i++)
     {
+        // parsing
         getline(cin, line);
         int first_space = line.find(" ", 0);
         int second_space = line.find(" ", first_space + 1);
@@ -244,18 +337,21 @@ int main(int argc, char const *argv[])
         string param1 = line.substr(first_space + 2, second_space - (first_space + 2));
         string param2 = (command == "LIST") ? line.substr(second_space + 2) : line.substr(second_space + 1);
 
+        // command add
         if (command == "ADD")
         {
             items->add(Item{
                 param2,
                 stof(param1)});
         }
+        // command remove
         else if (command == "REMOVE")
         {
             items->removeItem(Item{
                 param2,
                 stof(param1)});
         }
+        // command list
         else
         {
             // cout << "FROM " << param1 << " " << param2 << endl;
@@ -275,7 +371,8 @@ int main(int argc, char const *argv[])
                 printf("$%.2f", price);
                 cout << " " << name;
 
-                if (current->next_node) {
+                if (current->next_node)
+                {
                     cout << ", ";
                 }
 
