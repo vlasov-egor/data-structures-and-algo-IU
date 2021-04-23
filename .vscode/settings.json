@@ -38,6 +38,7 @@
         "vector": "cpp",
         "__hash_table": "cpp",
         "locale": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cstddef": "cpp"
     }
 }
