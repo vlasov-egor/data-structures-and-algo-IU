@@ -9,40 +9,152 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <vector>
+#include <map>
 
 using namespace std;
 
-template <class T>
+template <class V>
 class Vertex
 {
-    T value;
+public:
+    V value;
+
+    Vertex(V value)
+    {
+        this->value = value;
+    }
 };
 
-template <class T>
+template <class E, class V>
 class Edge
 {
-    Vertex<T> *start;
-    Vertex<T> *end;
+public:
+    Vertex<V> *begin;
+    Vertex<V> *end;
 
-    T weight;
+    E weight;
+
+    Edge(Vertex<V> *begin, Vertex<V> *end, E weight)
+    {
+        this->begin = begin;
+        this->end = end;
+        this->weight = weight;
+    }
 };
 
-template <class T>
+template <class E, class V>
 class Graph_ADT
 {
-    virtual Vertex<T> *addVertex(T value) = 0;
-    virtual void removeVertex(Vertex<T> &vertex) = 0;
-    virtual Edge<T> *addEdge(Vertex<T> from, Vertex<T> to, T weight) = 0;
-    virtual void removeEdge(Edge<T> edge) = 0;
-    virtual vector<Edge<T>> edgesFrom(Vertex<T> vertex) = 0;
-    virtual vector<Edge<T>> edgesTo(Vertex<T> vertex) = 0;
-    virtual Vertex<T> findVertex(T value) = 0;
-    virtual Edge<T> findEdge(T from_value, T to_value) = 0;
-    virtual bool hasEdge(Vertex<T> v, Vertex<T> u) = false;
+    virtual Vertex<V> *addVertex(V value) = 0;
+    virtual void removeVertex(Vertex<V> vertex) = 0;
+    virtual Edge<E, V> *addEdge(Vertex<V> *from, Vertex<V> *to, E weight) = 0;
+    virtual void removeEdge(Edge<E, V> edge) = 0;
+    virtual vector<Edge<E, V>> edgesFrom(Vertex<V> vertex) = 0;
+    virtual vector<Edge<E, V>> edgesTo(Vertex<V> vertex) = 0;
+    virtual Vertex<V> findVertex(V value) = 0;
+    virtual Edge<E, V> findEdge(V from_value, V to_value) = 0;
+    virtual bool hasEdge(Vertex<V> v, Vertex<V> u) = 0;
+};
+
+template <class E, class V>
+class AdjacencyMatrixGraph : public Graph_ADT<E, V>
+{
+public:
+    vector<vector<Edge<E, V> *>> matrix;
+    map<Vertex<V> *, int> vertex_index;
+
+    Vertex<V> *addVertex(V value)
+    {
+        // new vertex creating
+        auto new_vertex = new Vertex(value);
+
+        // matrix resizing
+        matrix.resize(this->matrix.size() + 1);
+        for (int i = 0; i < matrix.size(); ++i)
+        {
+            matrix[i].resize(this->matrix.size());
+        }
+
+        // insertion in map
+        vertex_index.insert({new_vertex, this->matrix.size() - 1});
+
+        return new_vertex;
+    }
+
+    void removeVertex(Vertex<V> vertex)
+    {
+    }
+
+    Edge<E, V> *addEdge(Vertex<V> *from, Vertex<V> *to, E weight)
+    {
+        auto new_edge = new Edge<E, V>(from, to, weight);
+
+        int index1 = vertex_index.at(from);
+        int index2 = vertex_index.at(to);
+
+        matrix[index1][index2] = new_edge;
+
+        // TODO
+        //? matrix[index2][index1] = weight; reverse or not?
+    }
+
+    void removeEdge(Edge<E, V> edge)
+    {
+    }
+
+    vector<Edge<E, V>> edgesFrom(Vertex<V> vertex)
+    {
+    }
+
+    vector<Edge<E, V>> edgesTo(Vertex<V> vertex)
+    {
+    }
+
+    Vertex<V> findVertex(V value)
+    {
+    }
+
+    Edge<E, V> findEdge(V from_value, V to_value)
+    {
+    }
+
+    bool hasEdge(Vertex<V> v, Vertex<V> u)
+    {
+    }
+
+    void printMatrix()
+    {
+        for (int i = 0; i < matrix.size(); i++)
+        {
+            for (int j = 0; j < matrix[i].size(); j++)
+            {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    void printSize()
+    {
+        cout << matrix.size() << endl;
+    }
 };
 
 int main(int argc, char const *argv[])
 {
-    /* code */
+    auto matrix = AdjacencyMatrixGraph<int, string>();
+
+    auto vertex1 = matrix.addVertex("govno1");
+    matrix.printSize();
+    matrix.printMatrix();
+    auto vertex2 = matrix.addVertex("govno2");
+    matrix.printSize();
+    matrix.printMatrix();
+    matrix.addEdge(vertex1, vertex2, 10);
+    matrix.printSize();
+    matrix.printMatrix();
+    cout << matrix.matrix[0][1]->weight;
+
     return 0;
 }
