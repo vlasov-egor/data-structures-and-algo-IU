@@ -43,6 +43,9 @@
         "map": "cpp",
         "istream": "cpp",
         "stack": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "__tree": "cpp",
+        "unordered_map": "cpp",
+        "__split_buffer": "cpp"
     }
 }
