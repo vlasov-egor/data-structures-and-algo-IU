@@ -125,12 +125,19 @@ public:
      */
     void removeVertex(Vertex<V> *vertex)
     {
-        int index = vertex_index.at(vertex);
-        for (int i = 0; i < matrix.size(); i++)
+        int index = vertex_index[vertex];
+        for (auto &i : vertex_index)
         {
+            if (i.second > index)
+            {
+                i.second -= 1;
+            }
+        }
 
-            matrix[i][index] = nullptr;
-            matrix[index][i] = nullptr;
+        matrix.erase(matrix.begin() + index);
+        for (auto &i : matrix)
+        {
+            i.erase(i.begin() + index);
         }
 
         vertex_index.erase(vertex);
@@ -149,8 +156,8 @@ public:
     {
         auto new_edge = new Edge<E, V>(from, to, weight);
 
-        int index1 = vertex_index.at(from);
-        int index2 = vertex_index.at(to);
+        int index1 = vertex_index[from];
+        int index2 = vertex_index[to];
 
         matrix[index1][index2] = new_edge;
 
@@ -164,8 +171,8 @@ public:
      */
     void removeEdge(Edge<E, V> *edge)
     {
-        int index1 = vertex_index.at(edge->begin);
-        int index2 = vertex_index.at(edge->end);
+        int index1 = vertex_index[edge->begin];
+        int index2 = vertex_index[edge->end];
 
         matrix[index1][index2] = nullptr;
     }
@@ -179,11 +186,21 @@ public:
     vector<Edge<E, V> *> edgesFrom(Vertex<V> *vertex)
     {
         vector<Edge<E, V> *> res;
-        int index = vertex_index.at(vertex);
-        for (int i = 0; i < matrix.size(); i++)
+        int index = vertex_index[vertex];
+
+        for (auto vertex_pair : vertex_index)
         {
-            res.push_back(matrix[index][i]);
+            if (matrix[index][vertex_pair.second] != nullptr)
+            {
+                res.push_back(matrix[index][vertex_pair.second]);
+            }
         }
+
+        // for (int i = 0; i < matrix.size(); i++)
+        // {
+        //     if (matrix[index][i] != nullptr)
+        //         res.push_back(matrix[index][i]);
+        // }
 
         return res;
     }
@@ -197,7 +214,8 @@ public:
     vector<Edge<E, V> *> edgesTo(Vertex<V> *vertex)
     {
         vector<Edge<E, V> *> res;
-        int index = vertex_index.at(vertex);
+        int index = vertex_index[vertex];
+
         for (int i = 0; i < matrix.size(); i++)
         {
             res.push_back(matrix[i][index]);
@@ -221,6 +239,7 @@ public:
                 return i.first;
             }
         }
+        return 0;
     }
 
     /**
@@ -232,8 +251,17 @@ public:
      */
     Edge<E, V> *findEdge(V from_value, V to_value)
     {
-        int index1 = vertex_index.at(vertex_name.at(from_value));
-        int index2 = vertex_index.at(vertex_name.at(to_value));
+        int index1 = vertex_index[vertex_name[from_value]];
+        int index2 = vertex_index[vertex_name[to_value]];
+
+        return matrix[index1][index2];
+    }
+
+    Edge<E, V> *findEdge(Vertex<V> *from, Vertex<V> *to)
+    {
+
+        int index1 = vertex_index[from];
+        int index2 = vertex_index[to];
 
         return matrix[index1][index2];
     }
@@ -248,8 +276,8 @@ public:
      */
     bool hasEdge(Vertex<V> *v, Vertex<V> *u)
     {
-        int index1 = vertex_index.at(v);
-        int index2 = vertex_index.at(u);
+        int index1 = vertex_index[v];
+        int index2 = vertex_index[u];
 
         return matrix[index1][index2] ? true : false;
     }
