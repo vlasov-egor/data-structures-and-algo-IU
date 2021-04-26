@@ -40,6 +40,9 @@
         "locale": "cpp",
         "ostream": "cpp",
         "cstddef": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "istream": "cpp",
+        "stack": "cpp",
+        "deque": "cpp"
     }
 }
