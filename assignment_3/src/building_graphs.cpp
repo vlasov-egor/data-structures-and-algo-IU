@@ -126,6 +126,8 @@ public:
     void removeVertex(Vertex<V> *vertex)
     {
         int index = vertex_index[vertex];
+
+        // decreasing the index by 1 if the vertex has an index greater than the current
         for (auto &i : vertex_index)
         {
             if (i.second > index)
@@ -134,12 +136,14 @@ public:
             }
         }
 
+        // removing from matrix row and column of current vertex
         matrix.erase(matrix.begin() + index);
         for (auto &i : matrix)
         {
             i.erase(i.begin() + index);
         }
 
+        // removing from maps
         vertex_index.erase(vertex);
         vertex_name.erase(vertex->value);
     }
@@ -257,6 +261,13 @@ public:
         return matrix[index1][index2];
     }
 
+    /**
+     * @brief edge finding
+     * 
+     * @param from start vertex
+     * @param to end vertex
+     * @return Edge<E, V>* ref to edge 
+     */
     Edge<E, V> *findEdge(Vertex<V> *from, Vertex<V> *to)
     {
 
